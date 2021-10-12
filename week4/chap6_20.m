@@ -2,24 +2,24 @@ clc; clear all; close all;
 k1 = 40000; k2 = 40; m = 95; g = 9.81; h = 0.43;
 
 %% 연속대입법
-% x = -0.2; % 초기값
-% es = 0.01;
-% F = @(d) (2*k2*d.^2.5)/(5*m*g) + (k1*d.^2)/(2*m*g) - h;
-% % xs=[-3:0.01:3];
-% % ys=F(xs);
-% % plot(xs,ys); grid on;
-% i=0;
-% ea=1;
-% while(1)
-%     xr = F(x);
-%     ea = abs((xr-x)/xr)*100;
-%     x = xr;
-%     if ea <= es
-%         break;
-%     end
-%     i=i+1;
-% end
-% fprintf("연속대입법: %.10f\n", xr);
+x = 0; % 초기값
+es = 0.01;
+F = @(d) (2*k2*d.^2.5)/(5*m*g) + (k1*d.^2)/(2*m*g) - h;
+i = 0;
+while(1)
+    xr = F(x);
+    ea = abs((xr-x)/xr)*100;
+    x = xr;
+    if ea <= es | i>=100
+        break;
+    end
+    i=i+1;
+end
+if i==100
+    fprintf("발산하여 근을 구할 수 없음.\n");
+else
+    fprintf("연속대입법: %.10f\n", xr);
+end
 
 %% Newton-Raphson
 es=0.0001;
