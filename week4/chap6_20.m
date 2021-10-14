@@ -24,8 +24,8 @@ end
 %% Newton-Raphson
 es=0.0001;
 i=0;
-xr=0;
-F = @(d) (2*k2*d^2.5)/5 + 0.5*k1*d^2 -m*g*d - m*g*h;
+xr=5;
+F = @(d) (2*k2*d^2.5)/5 + 0.5*k1*d^2 - m*g*d - m*g*h;
 dF = @(d) k2*d^1.5 + k1*d - m*g;
 while(1)
     xrold=xr;
@@ -44,8 +44,8 @@ fprintf("Newton Raphson: %.10f\n", xr);
 %% 할선법
 es=0.01;
 i=0;
-xrold=0; xr=0.01;
-F = @(d) (2*k2*d^2.5)/5 + 0.5*k1*d^2 -m*g*d - m*g*h;
+xrold=1; xr=5;
+F = @(d) (2*k2*d^2.5)/5 + 0.5*k1*d^2 - m*g*d - m*g*h;
 while(1)
     xroldold = xrold;
     xrold = xr;
@@ -63,7 +63,7 @@ fprintf("할선법: %.10f\n", xr);
 %% 수정 할선법
 es=0.01;
 i=0;
-xr=0;
+xr=5;
 delta_xr=0.01;
 F = @(d) (2*k2*d^2.5)/5 + 0.5*k1*d^2 - m*g*d - m*g*h;
 while(1)
