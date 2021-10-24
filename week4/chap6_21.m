@@ -5,6 +5,7 @@ v0=30; x=90; y0=1.8; y=1; g=9.81;
 x = 0; % 초기값
 es = 0.01;
 F = @(theta) atan(g*x/(2*v0^2*cos(theta)^2) + (y-y0)/x);
+
 i=0;
 ea=1;
 while(1)

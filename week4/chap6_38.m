@@ -2,23 +2,23 @@ clc;clear all;close all;
 L=45; Ac=6.362*10^-4; E=1.5*10^11; W=9000;
 
 %% 연속대입법
-x = 30; % 초기값
+xr = 30; % 초기값
 es = 0.01;
 F = @(L_) L*(1 + W*L_/(2*sqrt(L_^2-L^2)*Ac*E));
 i=0;
 ea=1;
 while(1)
-    xr = F(x);
-    ea = abs((xr-x)/xr)*100;
-    x = xr;
+    xrold = xr;
+    xr = F(xr);
+    ea = abs((xr-xrold)/xr)*100;
     if ea <= es
         break;
     end
     i=i+1;
 end
-fprintf("연속대입법 L': %.10f\n", x);
-fprintf("L'-L: %.10f\n", x-L);
-fprintf("d: %.10f\n", sqrt(x^2-L^2));
+fprintf("연속대입법 L': %.10f\n", xr);
+fprintf("L'-L: %.10f\n", xr-L);
+fprintf("d: %.10f\n", sqrt(xr^2-L^2));
 fprintf('\n');
 
 %% Newton-Raphson
@@ -90,9 +90,9 @@ fprintf('\n');
 %% Brent법
 F = @(L_) L-L_+ W*L_*L/(2*sqrt(L_^2-L^2)*Ac*E);
 a = 30; b = 50;
-x1 = a; x2 = b; x3 = (x1+x2)/2;
+x1 = a; x2 = b; x3 = (x1+x2)/2; % 이분법의 범위
 f1 = F(x1); f2 = F(x2);
-tol = 0.01;
+tol = 0.01; % Es
 for k=1:30
     f3=F(x3);
     if abs(f3)<tol

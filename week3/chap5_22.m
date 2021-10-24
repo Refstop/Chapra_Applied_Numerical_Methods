@@ -8,17 +8,16 @@ xU = 50;
 N = 10000;
 x = linspace(xL, xU, N);
 f = F(x);
-nb = 0; xb = [];
+xb = [];
 for k = 1:length(x)-1
     if sign(f(k)) ~= sign(f(k+1))
-        nb = nb + 1;
-        xb(nb) = (x(k)+x(k+1))/2;
+        xb = (x(k)+x(k+1))/2;
     end
 end
 fprintf("incsearch: %.16f\n", xb);
 
 %% bisearch
-Es = 0.01;
+Es = 0.001;
 N = ceil(log2((xU - xL)/Es));
 
 for i = 1:N
@@ -26,14 +25,16 @@ for i = 1:N
     SL = F(xL)*F(xr(i));
     if SL < 0
         xU = xr(i);
-    else
+    elseif SL > 0
         xL = xr(i);
+    else
+        break;
     end
 end
 fprintf("bisearch: %.16f\n", xr(N));
 
 %% interpolation
-Es = 0.01;
+Es = 0.001;
 E = 1;
 i = 0;
 while(i<50)
@@ -46,7 +47,7 @@ while(i<50)
         xL = xr(i);
     end
     if i > 1
-        E = abs((xr(i)-xr(i-1))/xr(i));
+        E = abs((xr(i)-xr(i-1))/xr(i))*100;
         if E < Es
             break; 
         end

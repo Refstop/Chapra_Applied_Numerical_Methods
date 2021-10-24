@@ -2,14 +2,14 @@ clc; clear all; close all;
 k1 = 40000; k2 = 40; m = 95; g = 9.81; h = 0.43;
 
 %% 연속대입법
-x = 0; % 초기값
+xr = 0; % 초기값
 es = 0.01;
 F = @(d) (2*k2*d.^2.5)/(5*m*g) + (k1*d.^2)/(2*m*g) - h;
 i = 0;
 while(1)
-    xr = F(x);
-    ea = abs((xr-x)/xr)*100;
-    x = xr;
+    xrold = xr;
+    xr = F(xr);
+    ea = abs((xr-xrold)/xr)*100;
     if ea <= es | i>=100
         break;
     end
