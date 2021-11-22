@@ -34,24 +34,25 @@ end
 fprintf("bisearch: %.16f\n", xr(N));
 
 %% interpolation
-Es = 0.001;
-E = 1;
-i = 0;
-while(i<50)
-    i = i + 1;
-    xr(i) = xU - F(xU)*(xL-xU)/(F(xL)-F(xU));
-    SL = F(xL)*F(xr(i));
+xL = 10; xU = 50;
+xr = 0;
+i = 0; es = 0.001; ea = 1;
+
+while(ea>es)
+    xrold = xr;
+    xr = xU - F(xU)*(xL-xU)/(F(xL)-F(xU));
+    SL = F(xL)*F(xr);
     if SL < 0
-        xU = xr(i);
+        xU = xr;
+    elseif SL > 0
+        xL = xr;
     else
-        xL = xr(i);
+        break;
     end
-    if i > 1
-        E = abs((xr(i)-xr(i-1))/xr(i))*100;
-        if E < Es
-            break; 
-        end
+    ea = abs((xr-xrold)/xr)*100;
+    if i >= 100
+        break;
     end
-    
+    i=i+1;
 end
-fprintf("interpolation: %.16f\n", xr(i));
+fprintf("interpolation: %.16f\n", xr);

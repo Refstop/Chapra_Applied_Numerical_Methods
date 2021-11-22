@@ -8,9 +8,9 @@ x1 = 0;
 x2 = 1;
 x3 = 4;
 
-Es = 0.1; Ea = 1;
+Es = 0.001; Ea = 1;
 
-while(1)
+while(Ea > Es)
     term1 = (x2-x1)*(F(x2)-F(x3));
     term2 = (x2-x1)*term1;
     term3 = (x2-x3)*(F(x2)-F(x1));
@@ -24,20 +24,20 @@ while(1)
         x1 = x2; x2 = xopt_2;
     end
     
-    if Ea <= Es || i>=100
+    if i>=100
         break;
     end
     i=i+1;
 end
 fprintf('(1) 2차 보간법 종료: %.8f\n', xopt_2);
 
-dx = 0.1;
+dx = 0.01;
 xl = xopt_2-dx; xu = xopt_2+dx;
 Es = 0.001; Ea = 1;
 phi = (1+sqrt(5))/2;
 i = 0;
 d = xu-xl;
-while(1)
+while(Ea > Es)
     d = (phi-1)*d;
     x1 = xl+d;
     x2 = xu-d;
@@ -48,7 +48,7 @@ while(1)
         xopt_g = x2; xu = x1;
         Ea = max(abs((x1-x2)/xopt_g)*100, abs((x2-xl)/xopt_g)*100);
     end
-    if Ea <= Es || i>=100
+    if i>=100
         break;
     end
     i=i+1;

@@ -2,17 +2,17 @@ clc;clear all;close all;
 v0=30; x=90; y0=1.8; y=1; g=9.81;
 
 %% 연속대입법
-x = 0; % 초기값
-es = 0.01;
+xr = 0; % 초기값
+i = 0; es = 0.01; ea = 1;
 F = @(theta) atan(g*x/(2*v0^2*cos(theta)^2) + (y-y0)/x);
 
-i=0;
-ea=1;
-while(1)
-    xr = F(x);
-    ea = abs((xr-x)/xr)*100;
-    x = xr;
-    if ea <= es
+while(ea>es)
+    xrold = xr;
+    xr = F(xr);
+    if xr ~= 0
+        ea = abs((xr-xrold)/xr)*100;
+    end
+    if i>=100
         break;
     end
     i=i+1;
@@ -20,60 +20,64 @@ end
 fprintf("연속대입법: %.10f\n", rad2deg(xr));
 
 %% Newton-Raphson
-es=0.0001;
-i=0;
-xr=0.01;
+xr = 0.01;
+i = 0; es = 0.0001; ea = 1;
+
+
 F = @(th) tan(th)*x - g*x^2/(2*v0^2*cos(th)^2) + y0-y;
 dF = @(th) x/tan(th) - g*x^2*tan(th)/(v0^2*cos(th)^2);
 % F = @(d) exp(-d)-d;
 % dF = @(d) -exp(-d)-1;
-while(1)
-    xrold=xr;
+while(ea>es)
+    xrold = xr;
     xr = xr-F(xr)/dF(xr);
-    i=i+1;
+    
     if xr~=0
         ea=abs((xr-xrold)/xr)*100;
     end
-    if ea<=es | i>=100
+    if i>=100
         break;
     end
+    i=i+1;
 end
 fprintf("Newton Raphson: %.10f\n", rad2deg(xr));
 
 
 %% 할선법
-es=0.01;
-i=0;
-xrold=0; xr=0.01;
+i=2;
+xr(i-1) = 0;
+xr(i) = 0.01;
+es = 0.01; ea = 1;
+
 F = @(th) tan(th)*x - g*x^2/(2*v0^2*cos(th)^2) + y0-y;
-while(1)
-    xroldold = xrold;
-    xrold = xr;
-    xr = xrold-(F(xrold)*(xroldold-xrold))/(F(xroldold)-F(xrold));
-    i=i+1;
-    if xr~=0
-        ea=abs((xr-xrold)/xr)*100;
+while(ea>es)
+    a = F(xr(i))*(xr(i-1)-xr(i));
+    b = F(xr(i-1)) - F(xr(i));
+    xr(i+1) = xr(i)-a/b;
+    if xr(i+1)~=0
+        ea=abs((xr(i+1)-xr(i))/xr(i+1))*100;
     end
-    if ea<=es | i>=100
+    if i>=100
         break;
     end
+    i=i+1;
 end
-fprintf("할선법: %.10f\n", rad2deg(xr));
+fprintf("할선법: %.10f\n", rad2deg(xr(i)));
 
 %% 수정 할선법
-es=0.01;
+es=0.01; ea=1;
 i=0;
-xr=0;
-delta_xr=0.01;
+xr=1;
+delta=0.01;
 F = @(th) tan(th)*x - g*x^2/(2*v0^2*cos(th)^2) + y0-y;
-while(1)
+while(ea>es)
     xrold = xr;
-    xr = xr-(delta_xr*F(xr))/(F(xr+delta_xr)-F(xr));
+    xr = xr-(delta*xr*F(xr))/(F(xr+delta*xr)-F(xr));
     i=i+1;
     if xr~=0
         ea=abs((xr-xrold)/xr)*100;
     end
-    if ea<=es | i>=100
+    if i>=100
         break;
     end
 end
@@ -87,12 +91,14 @@ f1 = F(x1); f2 = F(x2);
 tol = 0.01;
 for k=1:30
     f3=F(x3);
-    if abs(f3)<tol
+    if abs(f3) < tol
         xr=x3;
         break;
     end
-    if f1*f3<0.0; b=x3; % 근이 추정근보다 작으면 (a, b=x3, b)
-    else, a=x3; % 근이 추정근보다 크면 (a, a=x3, b)
+    if f1*f3 < 0.0
+        b=x3; % 근이 추정근보다 작으면 (a, b=x3)
+    else
+        a=x3; % 근이 추정근보다 크면 (a=x3, b)
     end
     if (b-a)<tol*max(abs(b),1.0)
         xr=0.5*(a+b);
@@ -109,7 +115,7 @@ for k=1:30
         dx=0.5*(b-a); x=a+dx; % 이분법에 따른 새로운 추정근
     end
     if x<x3 % 추정근이 전 추정값보다 작으면
-        x2=x3; f2;f3; % (x1, x2=x3, x2)
+        x2=x3; f2=f3; % (x1, x2=x3, x2)
     else % 크면
         x1=x3; f1=f3; % (x1, x1=x3, x2)
     end

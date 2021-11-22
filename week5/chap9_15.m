@@ -78,7 +78,7 @@ end
 if i>=1000
     fprintf("방정식의 기울기 값의 절댓값이 1보다 큰 경우가 존재하므로 발산한다.\n");
 else
-    fprintf("연속대입법(Gauss Seidal):\n");
+    fprintf("연속대입법(Jacobi):\n");
     fprintf("AB: %.8f  BC: %.8f  AD: %.8f BD: %.8f CD: %.8f\n", AB, BC, AD, BD, CD);
     fprintf("DE: %.8f  CE: %.8f  Ax: %.8f Ay: %.8f Ey: %.8f\n", DE, CE, Ax, Ay, Ey);
 end

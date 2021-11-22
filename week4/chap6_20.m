@@ -79,6 +79,35 @@ while(1)
 end
 fprintf("수정 할선법: %.10f\n", xr);
 
+%% 역 2차 보간법
+F = @(d) (2*k2*d^2.5)/5 + 0.5*k1*d^2 - m*g*d - m*g*h;
+i=3;
+x(i-2) = 0;
+x(i-1) = 0.01;
+x(i) = 0.1;
+
+y(i-2) = F(x(i-2));
+y(i-1) = F(x(i-1));
+y(i) = F(x(i));
+
+es = 0.001; ea = 1;
+while(ea>es)
+    t1 = y(i-1)*y(i);
+    t2 = (y(i-2)-y(i-1))*(y(i-2)-y(i));
+    t3 = y(i-2)*y(i);
+    t4 = (y(i-1)-y(i-2))*(y(i-1)-y(i));
+    t5 = y(i-2)*y(i-1);
+    t6 = (y(i)-y(i-2))*(y(i)-y(i-1));
+    x(i+1) = t1/t2*x(i-2) + t3/t4*x(i-1) + t5/t6*x(i);
+    y(i+1) = F(x(i+1));
+    ea = abs((x(i+1) - x(i))/x(i+1))*100;
+    if i>=103
+        break;
+    end
+    i=i+1;
+end
+fprintf("역 2차 보간법: %.10f\n", x(i));
+
 %% Brent법
 F = @(d) (2*k2*d^2.5)/5 + 0.5*k1*d^2 - m*g*d - m*g*h;
 a = 0; b = 5;
