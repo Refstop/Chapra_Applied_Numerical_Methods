@@ -8,11 +8,9 @@ Ia = int(F, [a b]);
 fprintf("해석적인 방법: %.6f\n", Ia);
 
 %% (b) 단일 구간에 대한 사다리꼴 공식
-Fb(x) = (F(b) - F(a)/(b-a))*(x-a)+F(a);
-Ib = int(Fb, [a b]);
+Ib = (b-a)*(F(b)+F(a))/2;
 e = abs((Ia - Ib)/Ia)*100;
 fprintf("단일 구간에 대한 사다리꼴 공식: %.6f    오차율: %.3f%%\n", Ib, e);
-
 
 %% (c) 합성 사다리꼴 공식
 n = 2;

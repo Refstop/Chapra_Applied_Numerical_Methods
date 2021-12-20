@@ -54,6 +54,6 @@ for i = n-1:-1:1
 end
 fprintf("LU 분해법(LU Decomposition): %.8f %.8f\n", X_LU(1), X_LU(2));
 
-% inverse
+%% inverse
 X_inv = inv(A)*b;
 fprintf("역행렬(Inverse Matrix): %.8f %.8f\n", X_inv(1), X_inv(2));
